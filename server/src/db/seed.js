@@ -31,25 +31,12 @@ async function seed() {
     const today = new Date();
     const readings = [];
 
-    // Current month: last 10 days
-    for (let d = 0; d < 10; d++) {
+    // Last 30 days
+    for (let d = 0; d < 30; d++) {
       const date = new Date(today);
       date.setDate(today.getDate() - d);
       const dateStr = date.toISOString().split('T')[0];
       const numSlots = Math.floor(Math.random() * 3) + 2; // 2-4
-      const shuffled = [...SLOTS].sort(() => 0.5 - Math.random());
-      for (let i = 0; i < numSlots; i++) {
-        readings.push([userId, dateStr, shuffled[i], randomValue()]);
-      }
-    }
-
-    // Previous month: ~10 days
-    const prevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 15);
-    for (let d = 0; d < 10; d++) {
-      const date = new Date(prevMonth);
-      date.setDate(prevMonth.getDate() - d);
-      const dateStr = date.toISOString().split('T')[0];
-      const numSlots = Math.floor(Math.random() * 3) + 2;
       const shuffled = [...SLOTS].sort(() => 0.5 - Math.random());
       for (let i = 0; i < numSlots; i++) {
         readings.push([userId, dateStr, shuffled[i], randomValue()]);
