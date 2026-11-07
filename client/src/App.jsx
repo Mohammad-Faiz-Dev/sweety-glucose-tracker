@@ -30,8 +30,8 @@ function AppShell() {
         <NavLink to="/readings" className={({ isActive }) => isActive ? 'active' : ''}>Readings</NavLink>
         <NavLink to="/reports" className={({ isActive }) => isActive ? 'active' : ''}>Reports</NavLink>
         {user && <span className="user-name">{user.name}</span>}
-        <button onClick={toggleTheme} title="Toggle theme">
-          {theme === 'light' ? '🌙' : '☀️'}
+        <button onClick={toggleTheme} title="Toggle dark/light mode" style={{ fontWeight: 600 }}>
+          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
         <button onClick={handleLogout}>Log out</button>
       </nav>
