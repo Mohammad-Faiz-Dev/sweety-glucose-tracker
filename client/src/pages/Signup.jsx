@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Signup() {
   const [name, setName] = useState('');
@@ -9,6 +10,7 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -31,6 +33,13 @@ export default function Signup() {
 
   return (
     <div className="auth-container">
+      <button
+        onClick={toggleTheme}
+        title="Toggle dark/light mode"
+        style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', fontSize: '1.25rem', cursor: 'pointer' }}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
       <div className="card auth-card">
         <h1>Sweety</h1>
         <p className="tagline">Track your glucose, simply.</p>
