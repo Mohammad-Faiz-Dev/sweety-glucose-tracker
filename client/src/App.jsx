@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, NavLink, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Readings from './pages/Readings';
@@ -14,6 +15,7 @@ function Protected({ children }) {
 
 function AppShell() {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -28,6 +30,9 @@ function AppShell() {
         <NavLink to="/readings" className={({ isActive }) => isActive ? 'active' : ''}>Readings</NavLink>
         <NavLink to="/reports" className={({ isActive }) => isActive ? 'active' : ''}>Reports</NavLink>
         {user && <span className="user-name">{user.name}</span>}
+        <button onClick={toggleTheme} title="Toggle theme">
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
         <button onClick={handleLogout}>Log out</button>
       </nav>
       <main className="main">
@@ -43,12 +48,14 @@ function AppShell() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/*" element={<AppShell />} />
-      </Routes>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/*" element={<AppShell />} />
+        </Routes>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
