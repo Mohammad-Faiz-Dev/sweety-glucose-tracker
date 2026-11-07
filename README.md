@@ -2,41 +2,63 @@
 
 Track your glucose, simply.
 
-A polished full-stack take-home project: React (Vite) frontend + Node.js/Express API + PostgreSQL.
+Full-stack app: React (Vite) frontend + Node.js/Express API + PostgreSQL (Supabase).
+
+## Live URLs
+
+- **Frontend (Vercel)**: _Coming soon — deploy after this commit_
+- **Backend (Render)**: _Coming soon — deploy after this commit_
+
+## Demo login
+
+- Email: `demo@sweety.app`
+- Password: `Demo1234!`
 
 ## Prerequisites
 
 - Node.js 18+
-- Docker (for Postgres) or a local PostgreSQL instance
+- A Supabase project (or any Postgres)
 
 ## Setup
 
-1. Clone / extract the project and enter the root.
-
-2. Start Postgres:
+1. Clone the repo:
 
    ```bash
-   docker compose up -d
+   git clone https://github.com/Mohammad-Faiz-Dev/sweety-glucose-tracker.git
+   cd sweety-glucose-tracker
    ```
 
-3. Copy environment file:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env` if needed (defaults work with the docker-compose).
-
-4. Install and set up the server:
+2. Server environment:
 
    ```bash
    cd server
+   cp .env.example .env
+   ```
+
+   Edit `server/.env` and set:
+   - `DATABASE_URL` — from Supabase → Settings → Database → Connection string (URI)
+   - `JWT_SECRET` — a long random string
+   - `CLIENT_ORIGIN` — your frontend origin (e.g. `http://localhost:5173` or your Vercel URL)
+
+3. Client environment:
+
+   ```bash
+   cd ../client
+   cp .env.example .env.local
+   ```
+
+   Set `VITE_API_URL` to your API (e.g. `http://localhost:4000/api` or your Render URL).
+
+4. Install and migrate:
+
+   ```bash
+   cd ../server
    npm install
    npm run migrate
    npm run seed
    ```
 
-5. Install the client:
+5. Client:
 
    ```bash
    cd ../client
@@ -45,68 +67,42 @@ A polished full-stack take-home project: React (Vite) frontend + Node.js/Express
 
 ## Running
 
-- API (from `server/`):
+- API: `cd server && npm run dev` → http://localhost:4000
+- Frontend: `cd client && npm run dev` → http://localhost:5173
 
-  ```bash
-  npm run dev
-  ```
+## API routes
 
-  Runs on http://localhost:4000
-
-- Frontend (from `client/`):
-
-  ```bash
-  npm run dev
-  ```
-
-  Opens on http://localhost:5173
-
-Demo account (after seed):
-
-- Email: `demo@sweety.app`
-- Password: `Demo1234!`
-
-## Project structure
-
-- `/server` — Express REST API, auth, readings, reports, migrations, seed
-- `/client` — React Vite app with protected routes, forms, reports + charts
-- `docker-compose.yml` — Postgres
-- `.env.example` — required variables
-
-## API
-
-- `POST /api/auth/signup` — `{ name, email, password }`
-- `POST /api/auth/login` — `{ email, password }` → `{ token, user }`
-- `GET /api/readings` — list (auth, newest first, optional pagination)
-- `POST /api/readings` — create
-- `PUT /api/readings/:id` — update
-- `DELETE /api/readings/:id` — delete
-- `GET /api/reports?type=daily|mtd|monthly&date=YYYY-MM-DD`
-
-All reading/report routes require `Authorization: Bearer <token>`.
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/auth/signup` | No | Register |
+| POST | `/api/auth/login` | No | Login → JWT |
+| GET | `/api/readings` | Yes | List readings (newest first) |
+| POST | `/api/readings` | Yes | Create reading |
+| PUT | `/api/readings/:id` | Yes | Update reading |
+| DELETE | `/api/readings/:id` | Yes | Delete reading |
+| GET | `/api/reports?type=daily\|weekly\|mtd\|monthly&date=YYYY-MM-DD` | Yes | Stats + readings |
 
 ## Validation
 
-Enforced on client and server with the exact messages specified in the brief.
+Exact messages enforced on client and server:
+- Missing value → “Please enter a glucose value.”
+- Not integer 40–600 → “Value must be between 40 and 600 mg/dl.”
+- Duplicate slot → “You already have an [slot] reading for this date.”
+- >4 per day → “You can add only 4 readings per day.”
+- Future date → “Date cannot be in the future.”
 
-## Notes / Assumptions
+## Notes
 
-- JWT stored in localStorage (simple for demo; httpOnly cookie would be more secure).
-- Time slots stored as VARCHAR with CHECK constraint (easier than Postgres ENUM for migrations).
-- Reports return the list of readings so the frontend can draw the Recharts line chart.
-- Pagination is supported on the API (`?page=&limit=`) but the UI currently loads the latest 100.
-- No real medical advice — purely a tracker.
-- Color coding is display-only (<70 amber, 70–140 green, >140 coral).
+- Passwords hashed with bcrypt.
+- JWT in localStorage.
+- Time slots: Morning (fasting), After breakfast, After lunch, After dinner.
+- Color coding: <70 amber, 70–140 green, >140 coral (display only).
+- Reports include highest, lowest, average, time-in-range %, high/low counts.
+- Seed creates demo user + ~30 days of sample readings.
 
-## What I’d improve with more time
+## Deployment
 
-- Proper httpOnly cookie sessions + refresh tokens
-- Full pagination UI + date-range filters
-- React Testing Library tests for the form validation messages
-- Better error boundaries and loading states
-- Docker Compose that also starts the API and client
-- Input sanitization / rate limiting
-- Accessibility audit and keyboard navigation polish
-- Unit tests for the report date-range logic
+- Backend: Render (Web Service, Node, start `npm start`)
+- Frontend: Vercel (root directory `client`, framework Vite)
 
 Enjoy tracking!

@@ -1,6 +1,10 @@
 node_modules/
 .env
+.env.local
 dist/
 *.log
 .DS_Store
 pgdata/
+server/.env
+client/.env
+client/.env.local
