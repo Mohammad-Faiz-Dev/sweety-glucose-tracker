@@ -9,9 +9,20 @@
   --text: #1E293B;
   --muted: #64748B;
   --border: #E2E8F0;
+  --nav-hover: #F1F5F9;
   --radius: 12px;
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+[data-theme="dark"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --border: #334155;
+  --nav-hover: #334155;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
 }
 
 * { box-sizing: border-box; }
@@ -53,7 +64,7 @@ button, input, select { font-family: inherit; }
   border-radius: 8px;
 }
 .nav a.active, .nav a:hover, .nav button:hover {
-  background: #F1F5F9;
+  background: var(--nav-hover);
   color: var(--primary);
 }
 .user-name { font-size: 0.9rem; color: var(--muted); }
@@ -117,7 +128,7 @@ input:focus, select:focus {
 }
 .btn:hover { background: var(--primary-dark); }
 .btn-secondary {
-  background: #F1F5F9;
+  background: var(--nav-hover);
   color: var(--text);
 }
 .btn-danger { background: #EF4444; }
@@ -181,9 +192,10 @@ th { font-weight: 600; color: var(--muted); font-size: 0.85rem; }
 .tab {
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  background: #F1F5F9;
+  background: var(--nav-hover);
   border: none;
   cursor: pointer;
+  color: var(--text);
 }
 .tab.active { background: var(--primary); color: white; }
 
